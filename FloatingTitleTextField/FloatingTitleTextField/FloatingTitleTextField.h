@@ -15,5 +15,3 @@ FOUNDATION_EXPORT double FloatingTitleTextFieldVersionNumber;
 FOUNDATION_EXPORT const unsigned char FloatingTitleTextFieldVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <FloatingTitleTextField/PublicHeader.h>
-
-

@@ -9,12 +9,12 @@
 import UIKit
 
 @IBDesignable
-class FloatingTitleTextField: UITextField {
+public class FloatingTitleTextField: UITextField {
 
   // Publics vars
 
   @IBInspectable
-  var title: String? {
+  public var title: String? {
     didSet {
       self.titleLabel.text = title
       self.titleLabel.sizeToFit()
@@ -26,10 +26,10 @@ class FloatingTitleTextField: UITextField {
   }
 
   @IBInspectable
-  var leftInset: CGFloat = 0.0
+  public var leftInset: CGFloat = 0.0
 
 
-  override var placeholder: String? {
+  override public var placeholder: String? {
     get {
       return internalPlaceholder
     }
@@ -53,12 +53,12 @@ class FloatingTitleTextField: UITextField {
 
   // Initialization
 
-  override init(frame: CGRect) {
+  override public init(frame: CGRect) {
     super.init(frame: frame)
     commonInit()
   }
 
-  required init?(coder aDecoder: NSCoder) {
+  required public init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     commonInit()
   }
@@ -74,7 +74,7 @@ class FloatingTitleTextField: UITextField {
 
   // Overrides
 
-  override func becomeFirstResponder() -> Bool {
+  override public func becomeFirstResponder() -> Bool {
     let becameResponder = super.becomeFirstResponder()
 
     let scale = CGFloat(0.75)
@@ -95,7 +95,7 @@ class FloatingTitleTextField: UITextField {
     return becameResponder
   }
 
-  override func resignFirstResponder() -> Bool {
+  override public func resignFirstResponder() -> Bool {
     let resigned = super.resignFirstResponder()
 
     if self.text?.characters.count == 0 {
@@ -116,11 +116,11 @@ class FloatingTitleTextField: UITextField {
     return resigned
   }
 
-  override func textRectForBounds(bounds: CGRect) -> CGRect {
+  override public func textRectForBounds(bounds: CGRect) -> CGRect {
     return CGRectInset(bounds, leftInset, 0.0)
   }
 
-  override func editingRectForBounds(bounds: CGRect) -> CGRect {
+  override public func editingRectForBounds(bounds: CGRect) -> CGRect {
     return textRectForBounds(bounds)
   }
 }
