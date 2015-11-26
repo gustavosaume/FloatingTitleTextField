@@ -39,12 +39,11 @@ public class FloatingTitleTextField: UITextField {
   }
 
 
-  // Privates
+
+  // Private vars
 
   private lazy var titleLabel: UILabel! = {
-    let label = UILabel()
-    label.autoresizingMask = [.FlexibleHeight, .FlexibleWidth]
-    return label
+    return UILabel()
   }()
 
   private var internalPlaceholder: String?
