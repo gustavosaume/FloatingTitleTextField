@@ -26,7 +26,11 @@ public class FloatingTitleTextField: UITextField {
   }
 
   @IBInspectable
-  public var leftInset: CGFloat = 0.0
+  public var leftInset: CGFloat = 0.0 {
+    didSet {
+      self.titleLabel.frame = self.titleLabel.frame.offsetBy(dx: leftInset, dy: 0.0)
+    }
+  }
 
 
   override public var placeholder: String? {
