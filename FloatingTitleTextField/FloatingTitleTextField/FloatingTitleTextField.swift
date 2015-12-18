@@ -32,13 +32,20 @@ public class FloatingTitleTextField: UITextField {
     }
   }
 
-
   override public var placeholder: String? {
     get {
       return internalPlaceholder
     }
     set(newPlaceholder) {
       internalPlaceholder = newPlaceholder
+    }
+  }
+
+  override public var text: String? {
+    didSet {
+      if let text = text where text.characters.count > 0 {
+        self.repositionTitleLabel(true, animated: false, completion: nil)
+      }
     }
   }
 
@@ -86,7 +93,7 @@ public class FloatingTitleTextField: UITextField {
   }
 
   override public func resignFirstResponder() -> Bool {
-    self.repositionTitleLabel(self.text?.characters.count == 0, animated: true, completion: nil)
+    self.repositionTitleLabel(self.text?.characters.count > 0, animated: true, completion: nil)
     super.placeholder = nil
     return super.resignFirstResponder()
   }
