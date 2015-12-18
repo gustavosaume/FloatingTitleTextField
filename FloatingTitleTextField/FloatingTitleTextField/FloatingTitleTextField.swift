@@ -78,45 +78,17 @@ public class FloatingTitleTextField: UITextField {
   // Overrides
 
   override public func becomeFirstResponder() -> Bool {
-    let becameResponder = super.becomeFirstResponder()
-
-    let scale = CGFloat(0.75)
-    let scaleTransform = CGAffineTransformMakeScale(scale, scale)
-
-    UIView.animateWithDuration(0.35, animations:{
-      self.titleLabel.transform = scaleTransform
-      self.titleLabel.alpha = 0.6
-
-      let distanceToTopCorner = CGPoint(x: -self.titleLabel.frame.minX, y: -self.titleLabel.frame.minY)
-      let topFrame = self.titleLabel.frame.offsetBy(dx: distanceToTopCorner.x, dy: distanceToTopCorner.y)
-
-      self.titleLabel.frame = topFrame
-    }) { _ in
+    self.repositionTitleLabel(true, animated: true) { _ in
       super.placeholder = self.internalPlaceholder
     }
 
-    return becameResponder
+    return super.becomeFirstResponder()
   }
 
   override public func resignFirstResponder() -> Bool {
-    let resigned = super.resignFirstResponder()
-
-    if self.text?.characters.count == 0 {
-      UIView.animateWithDuration(0.35) {
-        self.titleLabel.transform = CGAffineTransformMakeScale(1.0, 1.0)
-        self.titleLabel.alpha = 1.0
-
-        let distanceToCenterX = -self.titleLabel.frame.minX
-        let distanceToCenterY = ((self.bounds.height - self.titleLabel.bounds.height) / 2.0) - self.titleLabel.frame.minY
-        let centerFrame = self.titleLabel.frame.offsetBy(dx: distanceToCenterX, dy: distanceToCenterY)
-
-        self.titleLabel.frame = centerFrame
-
-        super.placeholder = nil
-      }
-    }
-
-    return resigned
+    self.repositionTitleLabel(self.text?.characters.count == 0, animated: true, completion: nil)
+    super.placeholder = nil
+    return super.resignFirstResponder()
   }
 
   override public func textRectForBounds(bounds: CGRect) -> CGRect {
@@ -125,5 +97,45 @@ public class FloatingTitleTextField: UITextField {
 
   override public func editingRectForBounds(bounds: CGRect) -> CGRect {
     return textRectForBounds(bounds)
+  }
+
+
+
+  // Utils
+
+  private func repositionTitleLabel(minimized: Bool, animated: Bool = false, completion: (Bool -> Void)?) {
+    let alpha:CGFloat = minimized ? 0.6 : 1.0
+    let scale:CGFloat = minimized ? CGFloat(0.75) : CGFloat(1.0)
+    let scaleTransform = CGAffineTransformMakeScale(scale, scale)
+    let topFrame: CGRect
+
+    if minimized {
+      let distanceToTopCorner = CGPoint(x: -self.titleLabel.frame.minX, y: -self.titleLabel.frame.minY)
+      topFrame = self.titleLabel.frame.offsetBy(dx: distanceToTopCorner.x, dy: distanceToTopCorner.y)
+    } else {
+      let distanceToCenterX = -self.titleLabel.frame.minX
+      let distanceToCenterY = ((self.bounds.height - self.titleLabel.bounds.height) / 2.0) - self.titleLabel.frame.minY
+      let centerFrame = self.titleLabel.frame.offsetBy(dx: distanceToCenterX, dy: distanceToCenterY)
+      topFrame = centerFrame.offsetBy(dx: self.leftInset, dy: 0.0)
+    }
+
+    let changes = {
+      self.titleLabel.transform = scaleTransform
+      self.titleLabel.alpha = alpha
+      self.titleLabel.frame = topFrame
+    }
+
+    if animated {
+      UIView.animateWithDuration(0.35, animations:changes) { completed in
+        if let completion = completion {
+          completion(completed)
+        }
+      }
+    } else {
+      changes()
+      if let completion = completion {
+        completion(true)
+      }
+    }
   }
 }
